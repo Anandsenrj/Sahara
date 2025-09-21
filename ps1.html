@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Sahara - Interactive Showcase</title>
+    <!-- Chosen Palette: Calm Harmony -->
+    <!-- Application Structure Plan: A thematic narrative scroll. The SPA guides the user through a story: the problem, the proposed solution (Sahara), an interactive deep-dive into its features, the technology blueprint, and the future impact. This linear, storytelling structure is more engaging for a project presentation than a dashboard, as it builds a compelling case by first establishing the 'why' (the problem) and then revealing the 'what' and 'how' (the solution and tech). Key interactions include a tab-like feature explorer and dynamic charts to make data digestible and memorable. -->
+    <!-- Visualization & Content Choices: 
+        1. Problem Stats -> Goal: Compare -> Viz: Interactive Bar Chart -> Interaction: Hover for details -> Justification: Visually demonstrates the scale of the problem more effectively than text alone. -> Library: Chart.js.
+        2. Core Features -> Goal: Organize -> Method: JS-powered tabbed interface -> Interaction: Click buttons to switch content -> Justification: Breaks down the multifaceted solution into clean, user-explorable sections without cluttering the page. -> Library: Vanilla JS.
+        3. Tech Architecture -> Goal: Organize -> Method: HTML/CSS Diagram -> Interaction: Hover highlights -> Justification: Clearly visualizes the system's components and data flow as required, without using forbidden SVG/Mermaid. -> Library: Tailwind CSS.
+        4. Impact Projection -> Goal: Show Change -> Viz: Interactive Line Chart -> Interaction: Hover for data points -> Justification: Illustrates future growth and potential impact in a dynamic, forward-looking way. -> Library: Chart.js.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #F8FAFC; }
+        .tab-button.active { background-color: #0284C7; color: white; }
+        .feature-panel { display: none; }
+        .feature-panel.active { display: block; }
+        .chart-container { position: relative; width: 100%; max-width: 600px; margin-left: auto; margin-right: auto; height: 300px; max-height: 400px; }
+        @media (min-width: 768px) { .chart-container { height: 350px; } }
+        .tech-box { transition: all 0.2s ease-in-out; }
+        .tech-box:hover { transform: translateY(-4px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); }
+    </style>
+</head>
+<body class="text-slate-700">
+
+    <header class="bg-white/80 backdrop-blur-lg sticky top-0 z-50 border-b border-slate-200">
+        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center space-x-3">
+                    <div class="p-2 bg-sky-100 rounded-full">
+                        <svg class="w-6 h-6 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </div>
+                    <span class="text-xl font-bold text-slate-800">Project Sahara (सहारा)</span>
+                </div>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#problem" class="text-sm font-medium text-slate-600 hover:text-sky-600">The Problem</a>
+                    <a href="#solution" class="text-sm font-medium text-slate-600 hover:text-sky-600">The Solution</a>
+                    <a href="#tech" class="text-sm font-medium text-slate-600 hover:text-sky-600">Technology</a>
+                    <a href="#impact" class="text-sm font-medium text-slate-600 hover:text-sky-600">Impact</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section id="hero" class="relative bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 text-center">
+                <h1 class="text-4xl md:text-6xl font-extrabold text-slate-900 tracking-tight">Your Confidential Companion for <span class="text-sky-600">Mental Wellness</span>.</h1>
+                <p class="mt-6 max-w-3xl mx-auto text-lg text-slate-600">Leveraging Generative AI to break the chains of stigma and build a foundation of emotional resilience for India's youth.</p>
+                <div class="mt-8 flex justify-center">
+                    <a href="#solution" class="px-8 py-3 bg-sky-600 text-white font-semibold rounded-full shadow-lg hover:bg-sky-700 transition-colors">Discover the Solution</a>
+                </div>
+            </div>
+        </section>
+
+        <section id="problem" class="py-20 sm:py-24">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center">
+                    <h2 class="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">The Silent Struggle</h2>
+                    <p class="mt-4 text-lg text-slate-600 max-w-3xl mx-auto">Young adults and students in India face immense pressure, often suffering in silence due to formidable barriers to mental healthcare.</p>
+                </div>
+                <div class="mt-16 grid md:grid-cols-2 gap-12 items-center">
+                    <div class="space-y-8">
+                        <div class="flex items-start space-x-4">
+                            <div class="flex-shrink-0 h-12 w-12 rounded-lg bg-amber-100 text-amber-600 flex items-center justify-center">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 18.343A8 8 0 016.343 7.657m11.314 0a8 8 0 010 11.314m-11.314 0a8 8 0 0111.314 0m-11.314 0L6.343 7.657"></path></svg>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-semibold text-slate-900">Social Stigma</h3>
+                                <p class="mt-1 text-slate-600">The pervasive fear of being judged or labeled, encapsulated by the phrase "log kya kahenge?" ("what will people say?"), prevents many from opening up.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start space-x-4">
+                            <div class="flex-shrink-0 h-12 w-12 rounded-lg bg-green-100 text-green-600 flex items-center justify-center">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-semibold text-slate-900">Absence of Confidentiality</h3>
+                                <p class="mt-1 text-slate-600">A legitimate fear that their concerns will not be kept private within family, friend, or university ecosystems.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl shadow-lg">
+                        <h4 class="text-md font-semibold text-center mb-4">Barriers to Seeking Mental Health Support</h4>
+                        <div class="chart-container">
+                            <canvas id="problemChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="solution" class="bg-white py-20 sm:py-24">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center">
+                    <h2 class="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">Introducing Sahara: A Holistic Ecosystem</h2>
+                    <p class="mt-4 text-lg text-slate-600 max-w-3xl mx-auto">Sahara is the first line of support—a primary resource that is always available, completely anonymous, and understands the unique cultural context of Indian youth.</p>
+                </div>
+
+                <div class="mt-16">
+                    <div class="flex justify-center border-b border-slate-200">
+                        <div class="flex space-x-2 md:space-x-4" id="tabs-container">
+                            <button data-target="mitra" class="tab-button active px-4 py-2 md:px-6 md:py-3 font-semibold text-slate-600 rounded-t-lg transition-colors">Mitra AI</button>
+                            <button data-target="gyan" class="tab-button px-4 py-2 md:px-6 md:py-3 font-semibold text-slate-600 rounded-t-lg transition-colors">Gyan Kendra</button>
+                            <button data-target="samaaj" class="tab-button px-4 py-2 md:px-6 md:py-3 font-semibold text-slate-600 rounded-t-lg transition-colors">Samaaj</button>
+                        </div>
+                    </div>
+                    <div class="mt-8">
+                        <div id="mitra" class="feature-panel active">
+                            <div class="grid md:grid-cols-2 gap-12 items-center">
+                                <div>
+                                    <h3 class="text-2xl font-bold text-sky-700 mb-4">"Mitra" - The AI Wellness Companion</h3>
+                                    <p class="mb-4 text-slate-600">The heart of Sahara, Mitra (मित्र, 'friend') is a conversational AI powered by Google's Gemini model. It's engineered for natural, empathetic dialogue, offering a safe space to talk anytime.</p>
+                                    <ul class="space-y-3">
+                                        <li class="flex items-center"><span class="mr-3 h-5 w-5 bg-sky-100 text-sky-700 rounded-full flex items-center justify-center font-bold">✓</span>Guided Self-Help (CBT, Mindfulness)</li>
+                                        <li class="flex items-center"><span class="mr-3 h-5 w-5 bg-sky-100 text-sky-700 rounded-full flex items-center justify-center font-bold">✓</span>Personalized Guided Journaling</li>
+                                        <li class="flex items-center"><span class="mr-3 h-5 w-5 bg-sky-100 text-sky-700 rounded-full flex items-center justify-center font-bold">✓</span>Immediate Crisis Intervention Support</li>
+                                    </ul>
+                                </div>
+                                <div class="bg-slate-800 p-4 rounded-xl shadow-2xl">
+                                    <div class="space-y-4">
+                                        <div class="flex justify-start">
+                                            <div class="p-3 bg-slate-700 text-white rounded-3xl rounded-bl-none max-w-xs">Hello, I'm feeling really stressed about my upcoming exams.</div>
+                                        </div>
+                                        <div class="flex justify-end">
+                                            <div class="p-3 bg-sky-600 text-white rounded-3xl rounded-br-none max-w-xs">I hear you. Exam pressure can be overwhelming. It's completely okay to feel this way. Can you tell me more about what's on your mind?</div>
+                                        </div>
+                                         <div class="flex justify-start">
+                                            <div class="p-3 bg-slate-700 text-white rounded-3xl rounded-bl-none max-w-xs">I just feel like if I don't do well, I'll disappoint everyone.</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="gyan" class="feature-panel">
+                             <div class="grid md:grid-cols-2 gap-12 items-center">
+                                <div>
+                                    <h3 class="text-2xl font-bold text-green-700 mb-4">"Gyan Kendra" - The Knowledge Center</h3>
+                                    <p class="mb-4 text-slate-600">A curated library of culturally relevant resources in a simple, easy-to-digest format. Information is power, and Gyan Kendra empowers users to understand their mental health better.</p>
+                                     <ul class="space-y-3">
+                                        <li class="flex items-center"><span class="mr-3 h-5 w-5 bg-green-100 text-green-700 rounded-full flex items-center justify-center font-bold">✓</span>Articles, infographics, and short videos.</li>
+                                        <li class="flex items-center"><span class="mr-3 h-5 w-5 bg-green-100 text-green-700 rounded-full flex items-center justify-center font-bold">✓</span>Topics: "What is Anxiety?", "Talking to Parents".</li>
+                                        <li class="flex items-center"><span class="mr-3 h-5 w-5 bg-green-100 text-green-700 rounded-full flex items-center justify-center font-bold">✓</span>AI-powered summaries for quick insights.</li>
+                                    </ul>
+                                </div>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div class="p-4 bg-slate-50 rounded-lg shadow"><h4 class="font-semibold">How to Deal With Exam Stress</h4><p class="text-sm text-slate-500 mt-1">5 practical tips...</p></div>
+                                    <div class="p-4 bg-slate-50 rounded-lg shadow"><h4 class="font-semibold">Understanding Anxiety</h4><p class="text-sm text-slate-500 mt-1">What it is and isn't...</p></div>
+                                    <div class="p-4 bg-slate-50 rounded-lg shadow"><h4 class="font-semibold">Mindfulness 101</h4><p class="text-sm text-slate-500 mt-1">A beginner's guide...</p></div>
+                                    <div class="p-4 bg-slate-50 rounded-lg shadow"><h4 class="font-semibold">Talking to Your Parents</h4><p class="text-sm text-slate-500 mt-1">Opening a dialogue...</p></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="samaaj" class="feature-panel">
+                             <div class="grid md:grid-cols-2 gap-12 items-center">
+                                <div>
+                                    <h3 class="text-2xl font-bold text-amber-700 mb-4">"Samaaj" - The Anonymized Community</h3>
+                                    <p class="mb-4 text-slate-600">A moderated, safe peer-support forum where users can share experiences anonymously. Knowing you're not alone is a powerful step toward healing.</p>
+                                    <ul class="space-y-3">
+                                        <li class="flex items-center"><span class="mr-3 h-5 w-5 bg-amber-100 text-amber-700 rounded-full flex items-center justify-center font-bold">✓</span>100% anonymous sharing.</li>
+                                        <li class="flex items-center"><span class="mr-3 h-5 w-5 bg-amber-100 text-amber-700 rounded-full flex items-center justify-center font-bold">✓</span>AI moderation to ensure a safe, positive space.</li>
+                                        <li class="flex items-center"><span class="mr-3 h-5 w-5 bg-amber-100 text-amber-700 rounded-full flex items-center justify-center font-bold">✓</span>Topic-based threads for focused discussions.</li>
+                                    </ul>
+                                </div>
+                                <div class="p-4 bg-slate-100 rounded-lg border border-slate-200">
+                                    <div class="p-3 bg-white rounded-lg shadow mb-3">
+                                        <p class="font-semibold text-sm">Exam Stress anonymous-user-123</p>
+                                        <p class="mt-1 text-slate-600">Does anyone else feel completely paralyzed before a big exam? I can't seem to focus...</p>
+                                    </div>
+                                    <div class="p-3 bg-white rounded-lg shadow">
+                                        <p class="font-semibold text-sm">Relationship Advice anonymous-user-456</p>
+                                        <p class="mt-1 text-slate-600">It's hard to talk to my partner about my anxiety. They try to understand but they don't get it.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="tech" class="py-20 sm:py-24">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center">
+                    <h2 class="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">Technology Blueprint</h2>
+                    <p class="mt-4 text-lg text-slate-600 max-w-3xl mx-auto">Built on a scalable, secure, and modern stack to ensure reliability and accessibility.</p>
+                </div>
+                <div class="mt-16 max-w-4xl mx-auto">
+                    <div class="flex flex-col md:flex-row items-center justify-center space-y-4 md:space-y-0 md:space-x-4">
+                        <div class="tech-box text-center p-6 bg-white rounded-xl shadow-lg border w-full md:w-1/4">
+                            <h4 class="font-bold">Frontend</h4>
+                            <p class="text-sm text-slate-500">HTML, Tailwind CSS, JS</p>
+                        </div>
+                        <div class="text-slate-300 font-mono hidden md:block">&lt;--&gt;</div>
+                        <div class="tech-box text-center p-6 bg-white rounded-xl shadow-lg border w-full md:w-1/3">
+                            <h4 class="font-bold">Backend & Database</h4>
+                            <p class="text-sm text-slate-500">Firebase: Firestore & Auth</p>
+                        </div>
+                        <div class="text-slate-300 font-mono hidden md:block">&lt;--&gt;</div>
+                        <div class="tech-box text-center p-6 bg-white rounded-xl shadow-lg border w-full md:w-1/3">
+                            <h4 class="font-bold">Generative AI Core</h4>
+                            <p class="text-sm text-slate-500">Google Cloud Vertex AI (Gemini)</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="impact" class="bg-white py-20 sm:py-24">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center">
+                    <h2 class="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">The Path Forward & Impact</h2>
+                    <p class="mt-4 text-lg text-slate-600 max-w-3xl mx-auto">Our go-to-market strategy focuses on reaching students where they are, with measurable goals to track our success in destigmatizing mental health.</p>
+                </div>
+                <div class="mt-16 grid md:grid-cols-2 gap-12 items-center">
+                    <div>
+                         <h3 class="text-xl font-bold text-slate-800 mb-6">Go-To-Market Strategy</h3>
+                         <ol class="relative border-l border-slate-200 space-y-8">
+                            <li class="ml-6">
+                                <span class="absolute flex items-center justify-center w-6 h-6 bg-sky-100 rounded-full -left-3 ring-8 ring-white">1</span>
+                                <h4 class="font-semibold">Pilot Program</h4>
+                                <p class="text-sm text-slate-500">Partner with universities and coaching centers.</p>
+                            </li>
+                            <li class="ml-6">
+                                <span class="absolute flex items-center justify-center w-6 h-6 bg-sky-100 rounded-full -left-3 ring-8 ring-white">2</span>
+                                <h4 class="font-semibold">Social Media Campaign</h4>
+                                <p class="text-sm text-slate-500">Targeted, relatable content on Instagram & YouTube.</p>
+                            </li>
+                             <li class="ml-6">
+                                <span class="absolute flex items-center justify-center w-6 h-6 bg-sky-100 rounded-full -left-3 ring-8 ring-white">3</span>
+                                <h4 class="font-semibold">Influencer Collaboration</h4>
+                                <p class="text-sm text-slate-500">Work with youth-focused educational influencers.</p>
+                            </li>
+                        </ol>
+                    </div>
+                    <div class="bg-slate-50 p-6 rounded-2xl">
+                         <h4 class="text-md font-semibold text-center mb-4">Projected User Growth (First Year)</h4>
+                         <div class="chart-container">
+                            <canvas id="impactChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-slate-800 text-slate-400">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 text-center text-sm">
+            <p>&copy; 2025 Project Sahara. A concept for the Google Cloud Generative AI Hackathon.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const tabsContainer = document.getElementById('tabs-container');
+            const featurePanels = document.querySelectorAll('.feature-panel');
+            const tabButtons = document.querySelectorAll('.tab-button');
+
+            tabsContainer.addEventListener('click', (e) => {
+                if (e.target.classList.contains('tab-button')) {
+                    const targetId = e.target.dataset.target;
+
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    e.target.classList.add('active');
+
+                    featurePanels.forEach(panel => {
+                        if (panel.id === targetId) {
+                            panel.classList.add('active');
+                        } else {
+                            panel.classList.remove('active');
+                        }
+                    });
+                }
+            });
+
+            const problemCtx = document.getElementById('problemChart').getContext('2d');
+            new Chart(problemCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Social Stigma', 'High Cost', 'Lack of Access', 'Confidentiality Fears'],
+                    datasets: [{
+                        label: '% of Youth Hesitant to Seek Help',
+                        data: [78, 65, 58, 72],
+                        backgroundColor: ['#F59E0B', '#10B981', '#3B82F6', '#6366F1'],
+                        borderRadius: 6,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    indexAxis: 'y',
+                    scales: {
+                        x: { beginAtZero: true, max: 100 },
+                    },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `${context.dataset.label}: ${context.raw}%`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            const impactCtx = document.getElementById('impactChart').getContext('2d');
+            new Chart(impactCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Q1', 'Q2', 'Q3', 'Q4'],
+                    datasets: [{
+                        label: 'Active Users',
+                        data: [5000, 25000, 75000, 150000],
+                        borderColor: '#0284C7',
+                        backgroundColor: 'rgba(2, 132, 199, 0.1)',
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { 
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    if (value >= 1000) return value / 1000 + 'k';
+                                    return value;
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+
